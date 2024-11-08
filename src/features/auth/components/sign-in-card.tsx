@@ -15,13 +15,18 @@ interface SignInCardProps {
 
 export const SignInCard = ({ setState }: SignInCardProps) => {
 	const { signIn } = useAuthActions();
+	const [isPending, setIsPending] = useState(false);
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const handleProviderSignIn = (value: 'github' | 'google') => {
-		signIn(value);
+	const onProviderSignIn = (value: 'github' | 'google') => {
+		setIsPending(true);
+		signIn(value).finally(() => {
+			setTimeout(() => setIsPending(false), 1500);
+		});
 	};
+
 	return (
 		<Card className='w-full h-full p-8'>
 			<CardHeader className='px-0 pt-0'>
@@ -51,7 +56,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 						type='submit'
 						className='w-full'
 						size='lg'
-						disabled={false}>
+						disabled={isPending}>
 						Continue
 					</Button>
 				</form>
@@ -59,8 +64,8 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 
 				<div className='flex flex-col gap-y-2.5'>
 					<Button
-						disabled={false}
-						onClick={() => {}}
+						disabled={isPending}
+						onClick={() => onProviderSignIn('google')}
 						variant='outline'
 						size='lg'
 						className='w-full relative'>
@@ -68,8 +73,8 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 						Continue with Google
 					</Button>
 					<Button
-						disabled={false}
-						onClick={() => handleProviderSignIn('github')}
+						disabled={isPending}
+						onClick={() => onProviderSignIn('github')}
 						variant='outline'
 						size='lg'
 						className='w-full relative'>
