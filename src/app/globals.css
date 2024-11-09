@@ -75,3 +75,7 @@ body {
 		@apply bg-background text-foreground;
 	}
 }
+
+::placeholder {
+	@apply text-sm font-medium;
+}
