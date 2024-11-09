@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/core": "0.34.2",
-    "@convex-dev/auth": "0.0.52",
+    "@auth/core": "^0.36.0",
+    "@convex-dev/auth": "^0.0.52",
+    "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
