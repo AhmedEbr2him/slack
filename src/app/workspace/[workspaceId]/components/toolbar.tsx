@@ -3,7 +3,7 @@ import { useGetWorkSpace } from '@/features/workspaces/api/use-get-workspace';
 import { useWorkspaceId } from '@/hooks/use-workspace-id';
 import { InfoIcon, Search } from 'lucide-react';
 
-const Toolbar = () => {
+export const Toolbar = () => {
 	const workspaceId = useWorkspaceId();
 	const { data, isLoading } = useGetWorkSpace({ id: workspaceId });
 
@@ -29,5 +29,3 @@ const Toolbar = () => {
 		</nav>
 	);
 };
-
-export default Toolbar;
