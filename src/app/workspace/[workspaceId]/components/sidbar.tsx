@@ -1,7 +1,7 @@
 import { UserButton } from '@/features/auth/components/user-button';
 import { WorkspaceSwitcher } from './workspace-switcher';
 import { SidebarButton } from './sidebar-button';
-import { Bell, Home, MessageSquare, MoreHorizontal } from 'lucide-react';
+import { Bell, Home, MessagesSquare, MoreHorizontal } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 export const Sidebar = () => {
@@ -14,8 +14,8 @@ export const Sidebar = () => {
 			isActive: true,
 		},
 		{
-			icon: MessageSquare,
-			label: 'DM',
+			icon: MessagesSquare,
+			label: 'DMs',
 			isActive: false,
 		},
 		{
