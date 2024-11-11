@@ -1,4 +1,4 @@
-const WorkspaceIdPage = async () => {
+const WorkspaceIdPage = () => {
 	return <div className=''>WorkspaceId page</div>;
 };
 

@@ -10,6 +10,7 @@ const generateCode = () => {
 
 	return code;
 };
+
 export const create = mutation({
 	args: {
 		name: v.string(),
@@ -35,6 +36,13 @@ export const create = mutation({
 			workspaceId,
 			role: 'admin',
 		});
+
+		// every time we create a new workspace it should have atleast one channel
+		await ctx.db.insert('channels', {
+			name: 'general',
+			workspaceId,
+		});
+
 		return workspaceId;
 	},
 });
