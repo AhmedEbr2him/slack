@@ -7,7 +7,7 @@ import { useCreateWorkspaceModal } from '@/features/workspaces/store/use-create-
 import { useGetWorkSpaces } from '@/features/workspaces/api/use-get-workspaces';
 import { useEffect, useMemo } from 'react';
 
-export default function Home() {
+export default async function Home() {
 	const router = useRouter();
 
 	const { data, isLoading } = useGetWorkSpaces();
