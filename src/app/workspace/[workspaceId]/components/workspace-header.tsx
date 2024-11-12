@@ -14,6 +14,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { PreferencesModal } from './preferences-modal';
+import { InviteModal } from './invite-modal';
 
 interface WorkspaceHeaderProps {
 	workspace: Doc<'workspaces'>;
@@ -21,9 +22,16 @@ interface WorkspaceHeaderProps {
 }
 export const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) => {
 	const [openPreferences, setOpenPreferences] = useState(false);
+	const [openInvite, setOpenInvite] = useState(false);
 
 	return (
 		<>
+			<InviteModal
+				open={openInvite}
+				setOpen={setOpenInvite}
+				name={workspace.name}
+				joinCode={workspace.joinCode}
+			/>
 			<PreferencesModal
 				open={openPreferences}
 				setOpen={setOpenPreferences}
@@ -60,7 +68,7 @@ export const WorkspaceHeader = ({ workspace, isAdmin }: WorkspaceHeaderProps) =>
 								<DropdownMenuSeparator />
 								<DropdownMenuItem
 									className='cursor-pointer py-2'
-									onClick={() => {}}>
+									onClick={() => setOpenInvite(true)}>
 									Invite people to {workspace.name}
 								</DropdownMenuItem>
 
