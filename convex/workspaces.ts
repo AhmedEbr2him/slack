@@ -11,6 +11,48 @@ const generateCode = () => {
 	return code;
 };
 
+export const join = mutation({
+	args: {
+		joinCode: v.string(),
+		workspaceId: v.id('workspaces'),
+	},
+	handler: async (ctx, args) => {
+		const userId = await auth.getUserId(ctx);
+
+		if (!userId) {
+			throw new Error('Unauthorized');
+		}
+
+		const workspace = await ctx.db.get(args.workspaceId);
+
+		if (!workspace) {
+			throw new Error('Workspace is not found');
+		}
+
+		if (workspace.joinCode !== args.joinCode.toLowerCase()) {
+			throw new Error('Invalid join code');
+		}
+
+		const existingMember = await ctx.db
+			.query('members')
+			.withIndex('by_workspace_id_user_id', q =>
+				q.eq('workspaceId', args.workspaceId).eq('userId', userId)
+			)
+			.unique();
+
+		if (existingMember) {
+			throw new Error('Already a member of this workspace');
+		}
+
+		await ctx.db.insert('members', {
+			userId,
+			workspaceId: workspace._id,
+			role: 'member',
+		});
+
+		return workspace._id;
+	},
+});
 export const resetJoinCode = mutation({
 	args: {
 		workspaceId: v.id('workspaces'),
@@ -110,6 +152,32 @@ export const get = query({
 	},
 });
 
+// this allows us to provide a new or non member of this workspace because if he is not a member prevent from access mutation
+export const getInfoById = query({
+	args: { id: v.id('workspaces') },
+
+	handler: async (ctx, args) => {
+		const userId = await auth.getUserId(ctx);
+
+		if (!userId) {
+			return null;
+		}
+
+		const member = await ctx.db
+			.query('members')
+			.withIndex('by_workspace_id_user_id', q =>
+				q.eq('workspaceId', args.id).eq('userId', userId)
+			)
+			.unique();
+
+		const workspace = await ctx.db.get(args.id);
+
+		return {
+			name: workspace?.name,
+			isMember: !!member,
+		};
+	},
+});
 export const getById = query({
 	args: { id: v.id('workspaces') },
 
@@ -129,6 +197,7 @@ export const getById = query({
 			.unique();
 
 		if (!member) return null;
+
 		return await ctx.db.get(args.id);
 	},
 });

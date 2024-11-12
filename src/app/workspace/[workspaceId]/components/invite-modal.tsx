@@ -72,13 +72,14 @@ export const InviteModal = ({ open, setOpen, name, joinCode }: InviteModalProps)
 					</DialogHeader>
 
 					<div className='flex flex-col gap-y-4 items-center justify-center py-10'>
-						<p className='text-4xl font-bold tracking-widest uppercase'>
-							{isPending ? (
-								<Loader className='size-6 animate-spin w-full h-full' />
-							) : (
-								joinCode
-							)}
-						</p>
+						{isPending ? (
+							<div className='h-full flex items-center justify-center'>
+								<Loader className='size-6 animate-spin text-muted-foreground' />
+							</div>
+						) : (
+							<p className='text-4xl font-bold tracking-widest uppercase'>{joinCode}</p>
+						)}
+
 						<Button
 							variant='ghost'
 							size='sm'
