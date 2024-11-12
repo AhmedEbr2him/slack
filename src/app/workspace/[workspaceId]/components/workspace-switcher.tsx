@@ -36,6 +36,7 @@ export const WorkspaceSwitcher = () => {
 			toast.error(`You already in active ${workspace?.name} workspace`);
 		}
 	};
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
