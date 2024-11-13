@@ -49,6 +49,7 @@ export const get = query({
 		return members;
 	},
 });
+
 export const current = query({
 	args: { workspaceId: v.id('workspaces') },
 	handler: async (ctx, args) => {

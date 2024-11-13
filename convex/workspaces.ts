@@ -53,6 +53,7 @@ export const join = mutation({
 		return workspace._id;
 	},
 });
+
 export const resetJoinCode = mutation({
 	args: {
 		workspaceId: v.id('workspaces'),

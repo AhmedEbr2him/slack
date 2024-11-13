@@ -30,7 +30,7 @@ export const WorkspaceSidebar = () => {
 	if (isLoading) {
 		return (
 			<div className='h-full flex flex-col items-center justify-center bg-[#5E2C5F]'>
-				<Loader className='size-6 animate-spin text-white' />
+				<Loader className='size-5 animate-spin text-white' />
 			</div>
 		);
 	}

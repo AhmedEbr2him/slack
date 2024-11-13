@@ -48,16 +48,16 @@ const WorkspaceIdPage = () => {
 		router,
 	]);
 
-	if (workspaceLoading || channelsLoading) {
+	if (workspaceLoading || channelsLoading || memberLoading) {
 		return (
 			<div className='h-full flex flex-1 flex-col items-center justify-center gap-2'>
-				<Loader className='size-6 animate-spin text-muted-foreground' />
+				<Loader className='size-5 animate-spin text-muted-foreground' />
 			</div>
 		);
 	}
 
 	// THIS IS KIND OF ERROR PAGE IF WORKSPACE GET DELETED WHILE WE ARE A GUEST OR LOOKING AT THIS
-	if (!workspace) {
+	if (!workspace || !member) {
 		return (
 			<div className='h-full flex flex-1 flex-col items-center justify-center gap-2'>
 				<TriangleAlert className='size-6 text-muted-foreground' />
