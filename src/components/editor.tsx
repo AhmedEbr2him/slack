@@ -9,6 +9,8 @@ import { Delta, Op } from 'quill/core';
 import Quill, { type QuillOptions } from 'quill';
 
 import { Hint } from './hint';
+import { EmojiPopover } from './emoji-popover';
+
 import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 
@@ -135,6 +137,13 @@ const Editor = ({
 		}
 	};
 
+	const onEmojiSelect = (emoji: any) => {
+		const quill = quillRef.current;
+
+		quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
+	};
+
+
 	return (
 		<div className='flex flex-col'>
 			<div className='flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white'>
@@ -154,15 +163,17 @@ const Editor = ({
 						</Button>
 					</Hint>
 
-					<Hint label='Emoji'>
+					<EmojiPopover
+						onEmojiSelect={onEmojiSelect}
+					>
 						<Button
 							variant='ghost'
 							size='sm'
 							disabled={disabled}
-							onClick={() => {}}>
+						>
 							<Smile className='size-4' />
 						</Button>
-					</Hint>
+					</EmojiPopover>
 
 					{variant === 'create' && (
 						<Hint label='Upload image'>
@@ -170,7 +181,7 @@ const Editor = ({
 								variant='ghost'
 								size='sm'
 								disabled={disabled}
-								onClick={() => {}}>
+								onClick={() => { }}>
 								<Image className='size-4' />
 							</Button>
 						</Hint>
@@ -182,13 +193,13 @@ const Editor = ({
 								variant='outline'
 								size='sm'
 								disabled={disabled}
-								onClick={() => {}}>
+								onClick={() => { }}>
 								Cancel
 							</Button>
 
 							<Button
 								disabled={disabled || isEmpty}
-								onClick={() => {}}
+								onClick={() => { }}
 								size='sm'
 								className='bg-[#007a5a] hover:bg-[#007a5a]/80 text-white'>
 								Save
@@ -200,7 +211,7 @@ const Editor = ({
 						<Button
 							disabled={disabled || isEmpty}
 							size='iconSm'
-							onClick={() => {}}
+							onClick={() => { }}
 							className={cn(
 								'ml-auto',
 								isEmpty
@@ -213,11 +224,16 @@ const Editor = ({
 				</div>
 			</div>
 
-			<div className='p-2 text-[10px] text-muted-foreground flex justify-end'>
-				<p className=''>
-					<strong>Shift + Return</strong> to add a new line
-				</p>
-			</div>
+			{variant === "create" &&
+				(<div className={cn(
+					'p-2 text-[10px] text-muted-foreground flex justify-end opacity-0 transition',
+					!isEmpty && "opacity-100"
+				)}>
+					<p>
+						<strong>Shift + Return</strong> to add a new line
+					</p>
+				</div>
+				)}
 		</div>
 	);
 };
