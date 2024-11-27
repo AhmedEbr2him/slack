@@ -9,7 +9,12 @@ interface HintProps {
 	align?: 'start' | 'center' | 'end';
 }
 
-export const Hint = ({ label, children, align, side }: HintProps) => {
+export const Hint = ({
+	label,
+	children,
+	align,
+	side
+}: HintProps) => {
 	return (
 		<TooltipProvider>
 			<Tooltip delayDuration={50}>
