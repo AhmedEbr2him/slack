@@ -7,12 +7,21 @@ import { useChannelId } from '@/hooks/use-channel-id';
 import { useWorkspaceId } from '@/hooks/use-workspace-id';
 
 import { useCreateMessage } from '@/features/messages/api/use-create-message';
+import { useGenerateUploadUrl } from '@/features/upload/api/use-generate-upload-url';
+import type { Id } from '../../../../../../../convex/_generated/dataModel';
 
 const Editor = dynamic(() => import('@/components/editor'), { ssr: false });
 
 interface ChatInputProps {
 	placeholder: string;
-}
+};
+
+interface CreateMessageValues {
+	channelId: Id<"channels">;
+	workspaceId: Id<"workspaces">;
+	body: string;
+	image?: Id<"_storage"> | undefined;
+};
 
 export const ChatInput = ({ placeholder }: ChatInputProps) => {
 	const [editorKey, setEditorKey] = useState(0);
@@ -24,6 +33,8 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
 	const channelId = useChannelId();
 
 	const { mutate: createMessage } = useCreateMessage();
+	const { mutate: generateUploadUrl } = useGenerateUploadUrl();
+
 	const handleSubmit = async ({
 		body,
 		image
@@ -33,12 +44,41 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
 	}) => {
 		try {
 			setIsPending(true);
+			editorRef?.current?.enable(false);
 
-			await createMessage({
-				body,
-				workspaceId,
+			const valuse: CreateMessageValues = {
 				channelId,
-			}, { throwError: true });
+				workspaceId,
+				body,
+				image: undefined,
+			};
+
+			if (image) {
+				const url = await generateUploadUrl({}, { throwError: true });
+
+				console.log({ url });
+
+				if (!url) {
+					throw new Error("URL not found.");
+				};
+
+				const result = await fetch(url, {
+					method: "POST",
+					headers: { "Content-Type": image.type },
+					body: image,
+				});
+				console.log({ result });
+
+				if (!result.ok) {
+					throw new Error("Faild to upload image.");
+				};
+
+				const { storageId } = await result.json();
+
+				valuse.image = storageId;
+			};
+
+			await createMessage(valuse, { throwError: true });
 
 			// Every time the key changes the editor component will be destroyed and rebuild again and from this way the entire state will be reset
 			setEditorKey((prevKey) => prevKey + 1);
@@ -46,11 +86,11 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
 		} catch (error) {
 			toast.error("Faild to send message!")
 		} finally {
-			setIsPending(false)
+			setIsPending(false);
+			editorRef?.current?.enable(true);
 		}
 
 	};
-	console.log(isPending);
 
 	return (
 		<div className='px-5 w-full'>
