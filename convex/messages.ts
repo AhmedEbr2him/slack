@@ -180,7 +180,8 @@ export const get = query({
       ),
     };
   }
-})
+});
+
 export const create = mutation({
   args: {
     body: v.string(),

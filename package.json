@@ -24,6 +24,7 @@
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"convex": "^1.17.0",
+		"date-fns": "^4.1.0",
 		"input-otp": "^1.4.1",
 		"jotai": "^2.10.1",
 		"json5": "^2.2.3",

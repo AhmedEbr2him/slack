@@ -34,6 +34,7 @@ export const UserItem = ({ id, image, label = 'Member', variant }: UserItemProps
 	const workspaceId = useWorkspaceId();
 
 	const avatarFallback = label.charAt(0).toLocaleUpperCase();
+
 	return (
 		<Button
 			variant='transparent'
@@ -41,14 +42,11 @@ export const UserItem = ({ id, image, label = 'Member', variant }: UserItemProps
 			size='sm'
 			asChild>
 			<Link href={`/workspace/${workspaceId}/member/${id}`}>
-				<Avatar className='size-5 rounded-md mr-1'>
+				<Avatar className='size-5 mr-1'>
 					{image && (
-						<AvatarImage
-							className='rounded-md'
-							src={image}
-						/>
+						<AvatarImage src={image} />
 					)}
-					<AvatarFallback className='rounded-md bg-sky-500 text-white text-xs'>
+					<AvatarFallback>
 						{avatarFallback}
 					</AvatarFallback>
 				</Avatar>
