@@ -24,7 +24,7 @@ export const Thumbnail = ({
           <img
             src={url}
             alt="message-image"
-            className='rounded-md  object-cover size-full'
+            className='rounded-md object-cover size-full'
           />
         </div>
       </DialogTrigger>
@@ -32,7 +32,7 @@ export const Thumbnail = ({
         <img
           src={url}
           alt="message-image"
-          className='rounded-md  object-cover size-full'
+          className='rounded-md object-cover size-full'
         />
       </DialogContent>
     </Dialog>

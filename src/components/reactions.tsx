@@ -70,7 +70,6 @@ export const Reactions = ({
       >
         <button className='h-6 px-3 rounded-full bg-slate-200/70 border border-transparent hover:border-slate-500 text-slate-800 flex items-center gap-x-1'>
           <MdOutlineAddReaction className='size-4' />
-
         </button>
       </EmojiPopover>
     </div>
