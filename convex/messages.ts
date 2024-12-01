@@ -72,6 +72,91 @@ const getMember = async (
     .unique();
 
 };
+export const getById = query({
+  args: {
+    id: v.id("messages"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await auth.getUserId(ctx);
+
+    if (!userId) {
+      throw new Error("Unauthorized");
+    };
+
+    const message = await ctx.db.get(args.id);
+
+    // this member is actuly wrote the message
+    if (!message) {
+      return null; // on query we return null
+    };
+
+    // prevent none member user accessing this option
+    const currentMember = await getMember(ctx, message.workspaceId, userId);
+
+    if (!currentMember) {
+      return null
+    };
+
+    const member = await populateMember(ctx, message.memberId);
+
+    if (!member) {
+      return null;
+    };
+
+    const user = await populateUser(ctx, member.userId);
+
+    if (!user) {
+      return null;
+    };
+
+    const reactions = await populateReactions(ctx, message._id);
+
+    const reactionsWithCounts = reactions.map((reaction) => {
+      return {
+        ...reaction,
+        count: reactions.filter((r) => r.value === reaction.value).length,
+      };
+    });
+
+    const dedupedReaction = reactionsWithCounts.reduce((acc, reaction) => {
+      const existingReaction = acc.find(
+        (r) => r.value === reaction.value,
+      );
+      // same reaction value
+      if (existingReaction) {
+        existingReaction.memberIds = Array.from(
+          // use set to remove dublicate value
+          new Set([...existingReaction.memberIds, reaction.memberId]) // ^_^(1) , ^_^(1)=> ^_^(2)
+        )
+      } else {
+        acc.push({ ...reaction, memberIds: [reaction.memberId] });
+      }
+
+      return acc;
+    },
+      // type
+      [] as (Doc<"reactions"> & {
+        count: number;
+        memberIds: Id<"members">[];
+      })[]
+    );
+
+    // using this way to remove memberId
+    const reactionsWithoutMemberIdProperty = dedupedReaction.map(
+      ({ memberId, ...rest }) => rest,
+    );
+
+    return {
+      ...message,
+      image: message.image
+        ? await ctx.storage.getUrl(message.image)
+        : undefined,
+      user,
+      member,
+      reactions: reactionsWithoutMemberIdProperty
+    }
+  }
+})
 
 export const remove = mutation({
   args: { id: v.id("messages") },
@@ -182,10 +267,13 @@ export const get = query({
             };
 
             const reactions = await populateReactions(ctx, message._id);
+
             const thread = await populateThread(ctx, message._id);
+
             const image = message.image
               ? await ctx.storage.getUrl(message.image)
               : undefined;
+
             const reactionsWithCounts = reactions.map((reaction) => {
               return {
                 ...reaction,
