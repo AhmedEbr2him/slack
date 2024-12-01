@@ -6,6 +6,7 @@ import { Hint } from './hint';
 
 import { useUpdateMessage } from '@/features/messages/api/use-update-message';
 import { useDeleteMessage } from '@/features/messages/api/use-delete-message';
+import { useToggleReaction } from '@/features/reactions/api/use-toggle-reaction';
 
 import {
   Avatar,
@@ -83,8 +84,20 @@ export const Message = ({
 
   const { mutate: updateMessage, isPending: isUpdateMessagePending } = useUpdateMessage();
   const { mutate: deleteMessage, isPending: isDeleteMessagePending } = useDeleteMessage();
+  const { mutate: toggleReaction, isPending: isTogglingReactionPending } = useToggleReaction();
 
   const isPending = isUpdateMessagePending || isDeleteMessagePending;
+
+  const handleReaction = (value: string) => {
+    toggleReaction({
+      messageId: id,
+      value,
+    }, {
+      onError: () => {
+        toast.error("Faild to set reaction");
+      },
+    });
+  };
 
   const handleUpdateMessage = ({ body }: { body: string }) => {
     updateMessage({ id, body }, {
@@ -113,7 +126,9 @@ export const Message = ({
         toast.error("Faild to delete message")
       }
     })
-  }
+  };
+
+
   if (isCompact) {
     return (
       <>
@@ -155,6 +170,7 @@ export const Message = ({
                     </Hint>
                     : null
                   }
+                  {JSON.stringify(reactions)}
                 </div>
               </div>
             )}
@@ -166,7 +182,7 @@ export const Message = ({
               handleEdit={() => setEditingId(id)}
               handleThread={() => { }}
               handleDelete={handleDeleteMessage}
-              handleReaction={() => { }}
+              handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
             />
           )}
@@ -239,7 +255,9 @@ export const Message = ({
                     <span className="text-xs text-muted-foreground hover:underline cursor-default">(edited)</span>
                   </Hint>
                 ) : null}
-              </div>)}
+                {JSON.stringify(reactions)}
+              </div>
+            )}
         </div>
 
         {!isEditing && (
@@ -249,7 +267,7 @@ export const Message = ({
             handleEdit={() => setEditingId(id)}
             handleThread={() => { }}
             handleDelete={handleDeleteMessage}
-            handleReaction={() => { }}
+            handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
           />
         )}

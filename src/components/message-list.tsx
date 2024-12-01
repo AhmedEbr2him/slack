@@ -52,7 +52,6 @@ export const MessageList = ({
       const date = new Date(message._creationTime);
       const dateKey = format(date, "yyyy-MM-dd");
 
-      console.log(groups[dateKey]);
 
       if (!groups[dateKey]) {
         groups[dateKey] = [];

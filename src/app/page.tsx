@@ -16,7 +16,6 @@ export default function Home() {
 
 	const workspaceId = useMemo(() => data?.[0]?._id, [data]);
 
-	console.log('workspaceId', workspaceId);
 
 	useEffect(() => {
 		// Only attempt route replacement when loading is finished

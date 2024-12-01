@@ -29,9 +29,8 @@ export const EmojiPopover = ({
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   const onSelect = (emoji: any) => {
-    onEmojiSelect(emoji);
+    onEmojiSelect(emoji.native);
     setPopoverOpen(false);
-    console.log(emoji);
 
     setTimeout(() => {
       setTooltipOpen(false);
