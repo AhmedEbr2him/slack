@@ -19,6 +19,7 @@ import { Toolbar } from './toolbar';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useConfirm } from '@/hooks/use-confirm';
+import { Reactions } from './reactions';
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
@@ -170,7 +171,11 @@ export const Message = ({
                     </Hint>
                     : null
                   }
-                  {JSON.stringify(reactions)}
+                  <Reactions
+                    data={reactions}
+                    onChange={handleReaction}
+                    disabled={isTogglingReactionPending}
+                  />
                 </div>
               </div>
             )}
@@ -255,7 +260,12 @@ export const Message = ({
                     <span className="text-xs text-muted-foreground hover:underline cursor-default">(edited)</span>
                   </Hint>
                 ) : null}
-                {JSON.stringify(reactions)}
+
+                <Reactions
+                  data={reactions}
+                  onChange={handleReaction}
+                  disabled={isTogglingReactionPending}
+                />
               </div>
             )}
         </div>
