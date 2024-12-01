@@ -45,7 +45,7 @@ const WorkspaceIdLayout = ({ children }: WorkspaceIdLayoutProps) => {
 							<ResizablePanel minSize={20} defaultSize={29}>
 								{parentMessageId ? (
 									<Thread
-										messageId={parentMessageId as Id<"messages">}
+										messageId={parentMessageId as Id<"messages">} // give convex specific context
 										onClose={onClose}
 									/>
 								) : (
