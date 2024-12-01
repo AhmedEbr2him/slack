@@ -8,6 +8,9 @@ import { useUpdateMessage } from '@/features/messages/api/use-update-message';
 import { useDeleteMessage } from '@/features/messages/api/use-delete-message';
 import { useToggleReaction } from '@/features/reactions/api/use-toggle-reaction';
 
+import { useConfirm } from '@/hooks/use-confirm';
+import { usePanel } from '@/hooks/use-panel';
+
 import {
   Avatar,
   AvatarImage,
@@ -18,7 +21,6 @@ import { Toolbar } from './toolbar';
 
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-import { useConfirm } from '@/hooks/use-confirm';
 import { Reactions } from './reactions';
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
@@ -49,13 +51,13 @@ interface MessageProps {
   threadTimestamp?: number;
 };
 
+
 const formatFullTime = (date: Date) => {
   return `${isToday(date)
     ? "Today"
     : isYesterday(date) ? "Yesterday"
       : format(date, "MMM d, yyyy")} at ${format(date, "hh:mm:ss a")}`
 };
-
 
 export const Message = ({
   id,
@@ -76,7 +78,7 @@ export const Message = ({
   threadImage,
   threadTimestamp
 }: MessageProps) => {
-  const avatarFallback = authorName.charAt(0).toLocaleUpperCase();
+  const { parentMessageId, onClose, onOpenMessage } = usePanel();
 
   const [ConfirmDialog, confirm] = useConfirm(
     'Delete message',
@@ -88,6 +90,8 @@ export const Message = ({
   const { mutate: toggleReaction, isPending: isTogglingReactionPending } = useToggleReaction();
 
   const isPending = isUpdateMessagePending || isDeleteMessagePending;
+
+  const avatarFallback = authorName.charAt(0).toLocaleUpperCase();
 
   const handleReaction = (value: string) => {
     toggleReaction({
@@ -121,7 +125,9 @@ export const Message = ({
       onSuccess: () => {
         toast.success("Message deleted");
 
-        // TODO: close thread if is opened
+        if (parentMessageId === id) {
+          onClose();
+        }
       },
       onError: () => {
         toast.error("Faild to delete message")
@@ -185,7 +191,7 @@ export const Message = ({
               isAuthor={isAuthor}
               isPending={isPending}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => { }}
+              handleThread={() => onOpenMessage(id)}
               handleDelete={handleDeleteMessage}
               handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
@@ -275,7 +281,7 @@ export const Message = ({
             isAuthor={isAuthor}
             isPending={isPending}
             handleEdit={() => setEditingId(id)}
-            handleThread={() => { }}
+            handleThread={() => onOpenMessage(id)}
             handleDelete={handleDeleteMessage}
             handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
