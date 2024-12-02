@@ -110,6 +110,7 @@ export const MessageList = ({
           })}
         </div>
       ))}
+
       {/* add ininite load */}
       <div
         className='h-1'
@@ -138,8 +139,8 @@ export const MessageList = ({
             <Loader className='size-4 animate-spin' />
           </span>
         </div>
-      )
-      }
+      )}
+
       {variant === "channel" && channelName && channelCreationTime && (
         <ChannelHero
           channelName={channelName}
