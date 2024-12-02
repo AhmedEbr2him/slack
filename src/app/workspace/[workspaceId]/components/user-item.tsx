@@ -30,7 +30,12 @@ interface UserItemProps {
 	variant?: VariantProps<typeof userItemVariants>['variant'];
 }
 
-export const UserItem = ({ id, image, label = 'Member', variant }: UserItemProps) => {
+export const UserItem = ({
+	id,
+	image,
+	label = 'Member',
+	variant
+}: UserItemProps) => {
 	const workspaceId = useWorkspaceId();
 
 	const avatarFallback = label.charAt(0).toLocaleUpperCase();
