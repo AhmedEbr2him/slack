@@ -22,6 +22,7 @@ import { Toolbar } from './toolbar';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Reactions } from './reactions';
+import { ThreadBar } from './thread-bar';
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
@@ -47,6 +48,7 @@ interface MessageProps {
   setEditingId: (id: Id<"messages"> | null) => void;
   hideThreadButton?: boolean;
   threadCount?: number;
+  threadName?: string;
   threadImage?: string;
   threadTimestamp?: number;
 };
@@ -76,7 +78,8 @@ export const Message = ({
   hideThreadButton,
   threadCount,
   threadImage,
-  threadTimestamp
+  threadName,
+  threadTimestamp,
 }: MessageProps) => {
   const { parentMessageId, onClose, onOpenMessage } = usePanel();
 
@@ -146,24 +149,24 @@ export const Message = ({
           isDeleteMessagePending &&
           "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200"
         )}>
-          {isEditing ?
-            (
-              <div className='w-full h-full'>
-                <Editor
-                  onSubmit={handleUpdateMessage}
-                  disabled={isPending}
-                  defaultValue={JSON.parse(body)}
-                  onCancel={() => setEditingId(null)}
-                  variant='update'
-                />
-              </div>
-            ) : (
-              <div className='flex items-start gap-2'>
-                <Hint label={formatFullTime(new Date(createdAt))}>
-                  <button className='text-xs text-muted-foreground opacity-0 group-hover:opacity-100 w-[40px] leading-[22px] text-center hover:underline'>
-                    {format(new Date(createdAt), "hh:mm")}
-                  </button>
-                </Hint>
+          <div className='flex items-start gap-2'>
+            <Hint label={formatFullTime(new Date(createdAt))}>
+              <button className='text-xs text-muted-foreground opacity-0 group-hover:opacity-100 w-[40px] leading-[22px] text-center hover:underline'>
+                {format(new Date(createdAt), "hh:mm")}
+              </button>
+            </Hint>
+            {isEditing ?
+              (
+                <div className='w-full h-full'>
+                  <Editor
+                    onSubmit={handleUpdateMessage}
+                    disabled={isPending}
+                    defaultValue={JSON.parse(body)}
+                    onCancel={() => setEditingId(null)}
+                    variant='update'
+                  />
+                </div>
+              ) : (
                 <div className="flex flex-col w-full">
                   <Renderer value={body} />
                   <Thumbnail url={image} />
@@ -182,9 +185,16 @@ export const Message = ({
                     onChange={handleReaction}
                     disabled={isTogglingReactionPending}
                   />
+                  <ThreadBar
+                    count={threadCount}
+                    image={threadImage}
+                    name={threadName}
+                    timestamp={threadTimestamp}
+                    onClick={() => onOpenMessage(id)}
+                  />
                 </div>
-              </div>
-            )}
+              )}
+          </div>
 
           {!isEditing && (
             <Toolbar
@@ -211,16 +221,13 @@ export const Message = ({
         isDeleteMessagePending &&
         "bg-rose-500/50 transform transition-all scale-y-0 origin-bottom duration-200"
       )}>
-
         <div className="flex items-start gap-2">
           <button>
             <Avatar className='size-8 mr-1'>
-              {authorImage && (
-                <AvatarImage
-                  src={authorImage}
-                  alt={authorName}
-                />
-              )}
+              <AvatarImage
+                src={authorImage}
+                alt={authorName}
+              />
               <AvatarFallback>
                 {avatarFallback}
               </AvatarFallback>
@@ -271,6 +278,13 @@ export const Message = ({
                   data={reactions}
                   onChange={handleReaction}
                   disabled={isTogglingReactionPending}
+                />
+                <ThreadBar
+                  count={threadCount}
+                  image={threadImage}
+                  name={threadName}
+                  timestamp={threadTimestamp}
+                  onClick={() => onOpenMessage(id)}
                 />
               </div>
             )}
