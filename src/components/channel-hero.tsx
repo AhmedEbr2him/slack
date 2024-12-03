@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 
-
 interface ChannelHeroProps {
   channelName: string;
   channelCreationTime: number;

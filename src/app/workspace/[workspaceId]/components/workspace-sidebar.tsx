@@ -4,8 +4,9 @@ import { useCurrentMember } from '@/features/members/api/use-current-member';
 import { useGetWorkSpace } from '@/features/workspaces/api/use-get-workspace';
 import { useGetChannels } from '@/features/channels/api/use-get-channels';
 import { WorkspaceSection } from './workspace-section';
-import { useGetMembers } from '@/features/members/api/use-getmembers';
+import { useGetMembers } from '@/features/members/api/use-get-members';
 
+import { useMemberId } from '@/hooks/use-member-id';
 import { useWorkspaceId } from '@/hooks/use-workspace-id';
 import { useChannelId } from '@/hooks/use-channel-id';
 
@@ -15,6 +16,7 @@ import { WorkspaceHeader } from './workspace-header';
 import { UserItem } from './user-item';
 
 export const WorkspaceSidebar = () => {
+	const memberId = useMemberId();
 	const channelId = useChannelId();
 	const workspaceId = useWorkspaceId();
 
@@ -26,6 +28,7 @@ export const WorkspaceSidebar = () => {
 	const { data: members, isLoading: membersLoading } = useGetMembers({ workspaceId });
 
 	const isLoading = memberLoading || workspaceLoading;
+/* http://localhost:3000/join/k5734df4d8acjbs5chn3bj5sfd74cr0y ukj6di */
 
 	if (isLoading) {
 		return (
@@ -81,13 +84,14 @@ export const WorkspaceSidebar = () => {
 			<WorkspaceSection
 				label='Direct Messages'
 				hint='New direct message'
-				onNew={() => {}}>
+				onNew={() => { }}>
 				{members?.map(memberItem => (
 					<UserItem
 						key={memberItem._id}
 						id={memberItem._id}
 						label={memberItem.user.name}
 						image={memberItem.user.image}
+						variant={memberItem._id === memberId ? 'active' : 'default'}
 					/>
 				))}
 			</WorkspaceSection>

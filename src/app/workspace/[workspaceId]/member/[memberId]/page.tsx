@@ -10,6 +10,7 @@ import { useMemberId } from '@/hooks/use-member-id';
 import { useWorkspaceId } from '@/hooks/use-workspace-id';
 
 import type { Id } from '../../../../../../convex/_generated/dataModel';
+import { Conversation } from './conversation';
 
 const MemberIdPage = () => {
   const memberId = useMemberId();
@@ -18,8 +19,6 @@ const MemberIdPage = () => {
   const [conversationId, setConversationId] = useState<Id<"conversations"> | null>(null);
 
   const { mutate, isPending } = useCreateOrGetConversation();
-
-  console.log({ conversationId });
 
   useEffect(() => {
     mutate({
@@ -37,7 +36,7 @@ const MemberIdPage = () => {
 
   if (isPending) {
     return (
-      <div className='h-full flex items-center justify-center'>
+      <div className='h-full flex flex-col gap-y-2 items-center justify-center'>
         <Loader className='size-6 animate-spin text-muted-foreground' />
       </div>
     );
@@ -55,9 +54,7 @@ const MemberIdPage = () => {
   };
 
   return (
-    <div className="">
-      {JSON.stringify({ conversationId })}
-    </div>
+    <Conversation id={conversationId} />
   )
 };
 
