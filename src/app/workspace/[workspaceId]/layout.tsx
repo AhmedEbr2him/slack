@@ -1,26 +1,26 @@
 'use client';
 
+import { Loader } from 'lucide-react';
+
+import { usePanel } from '@/hooks/use-panel';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 import { Thread } from '@/features/messages/components/thread';
-
+import { Profile } from '@/features/members/components/profile';
+import { WorkspaceSidebar } from './components/workspace-sidebar';
 
 import { Sidebar } from './components/sidbar';
 import { Toolbar } from './components/toolbar';
-import { WorkspaceSidebar } from './components/workspace-sidebar';
-import { usePanel } from '@/hooks/use-panel';
-import { Loader } from 'lucide-react';
-import type { Id } from '../../../../convex/_generated/dataModel';
+
+import { Id } from '../../../../convex/_generated/dataModel';
 
 interface WorkspaceIdLayoutProps {
 	children: React.ReactNode;
 }
 const WorkspaceIdLayout = ({ children }: WorkspaceIdLayoutProps) => {
-	const { parentMessageId, onClose } = usePanel();
+	const { parentMessageId, profileMemberId, onClose } = usePanel();
 
-	const showPanel = !!parentMessageId; // if we have parent message id
-
-	console.log(showPanel);
+	const showPanel = !!parentMessageId || !!profileMemberId; // transform string to boolean
 
 	return (
 		<div className='h-full'>
@@ -48,11 +48,17 @@ const WorkspaceIdLayout = ({ children }: WorkspaceIdLayoutProps) => {
 										messageId={parentMessageId as Id<"messages">} // give convex specific context
 										onClose={onClose}
 									/>
-								) : (
-									<div className='flex h-full items-center justify-center'>
-										<Loader className='size-5 animate-spin text-muted-foreground' />
-									</div>
-								)}
+								) : profileMemberId ? (
+									<Profile
+										memberId={profileMemberId as Id<"members">}
+										onClose={onClose}
+									/>
+								) :
+									(
+										<div className='flex h-full items-center justify-center'>
+											<Loader className='size-5 animate-spin text-muted-foreground' />
+										</div>
+									)}
 							</ResizablePanel>
 						</>
 					)}

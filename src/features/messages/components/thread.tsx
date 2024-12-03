@@ -153,7 +153,6 @@ export const Thread = ({
         <ThreadHeader onClose={onClose} />
         <div className='flex flex-col gap-y-2 h-full items-center justify-center'>
           <Loader className='size-5 animate-spin text-muted-foreground' />
-          <p className="text-sm text-muted-foreground">Loading...</p>
         </div>
       </div>
     )
@@ -290,4 +289,4 @@ const ThreadHeader = ({ onClose }: { onClose: () => void }) => {
       </Button>
     </div>
   )
-}
+};
