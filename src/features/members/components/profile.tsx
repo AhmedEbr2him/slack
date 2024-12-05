@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AlertTriangleIcon, ChevronDown, Loader, MailIcon, XIcon } from 'lucide-react';
 
 import { useConfirm } from '@/hooks/use-confirm';
@@ -9,10 +10,11 @@ import { useUpdateMember } from '../api/use-update-member';
 import { useDeleteMember } from '../api/use-delete-member';
 import { useCurrentMember } from '../api/use-current-member';
 
+import { Id } from '../../../../convex/_generated/dataModel';
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
   DropdownMenuRadioGroup,
   DropdownMenuContent,
   DropdownMenuRadioItem,
@@ -22,8 +24,6 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
-import { Id } from '../../../../convex/_generated/dataModel';
-import { useRouter } from 'next/navigation';
 
 interface ProfileProps {
   memberId: Id<"members">;
@@ -106,7 +106,6 @@ export const Profile = ({
       {
         onSuccess: () => {
           toast.success("Member role updted");
-          onClose();
         },
         onError: () => {
           toast.error("Faild to update member role")
@@ -158,6 +157,7 @@ export const Profile = ({
         </div>
         <div className="flex flex-col p-4">
           <p className="text-xl font-bold">{member?.user.name}</p>
+          <span className="text-xs text-muted-foreground capitalize">({member?.role})</span>
           {currentMember?.role === 'admin' &&
             /* IF WE ARE LOOKING FOR ANYONE ELSE */
             currentMember?._id !== memberId ? (
@@ -167,19 +167,21 @@ export const Profile = ({
                   <Button
                     variant='outline'
                     className='w-full capitalize'
+                    disabled={isPending}
                   >
                     {member.role} <ChevronDown className='size-4 ml-2' />
                   </Button>
                 </DropdownMenuTrigger>
+
                 <DropdownMenuContent className='w-full'>
                   <DropdownMenuRadioGroup
                     value={member.role}
                     onValueChange={(role) => onUpdate(role as 'admin' | 'member')}
                   >
-                    <DropdownMenuRadioItem value='admin'>
+                    <DropdownMenuRadioItem value='admin' disabled={isPending}>
                       Admin
                     </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value='member'>
+                    <DropdownMenuRadioItem value='member' disabled={isPending}>
                       Member
                     </DropdownMenuRadioItem>
                   </DropdownMenuRadioGroup>
@@ -189,6 +191,7 @@ export const Profile = ({
                 variant='destructive'
                 className='w-full'
                 onClick={onDelete}
+                disabled={isPending}
               >
                 Remove
               </Button>
@@ -201,6 +204,7 @@ export const Profile = ({
                 <Button
                   className='w-full'
                   variant='outline'
+                  disabled={isPending}
                   onClick={onLeave}
                 >
                   Leave
