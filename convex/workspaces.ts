@@ -258,7 +258,7 @@ export const remove = mutation({
 			throw new Error('Unauthorized');
 		}
 
-		// delete all associated things with workspace
+		// delete all associated tables that has a relationship with workspace
 		const [
 			members,
 			channels,
