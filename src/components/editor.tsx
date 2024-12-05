@@ -1,5 +1,7 @@
 import Image from 'next/image';
 
+import EmojiPicker from "emoji-picker-react";
+
 import {
 	MutableRefObject,
 	useEffect,
@@ -160,10 +162,10 @@ const Editor = ({
 		}
 	};
 
-	const onEmojiSelect = (emoji: any) => {
+	const onEmojiSelect = (emojiValue: string) => {
 		const quill = quillRef.current;
 
-		quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
+		quill?.insertText(quill?.getSelection()?.index || 0, emojiValue);
 	};
 
 
@@ -221,9 +223,7 @@ const Editor = ({
 						</Button>
 					</Hint>
 
-					<EmojiPopover
-						onEmojiSelect={onEmojiSelect}
-					>
+					<EmojiPopover onEmojiSelect={onEmojiSelect}>
 						<Button
 							variant='ghost'
 							size='sm'

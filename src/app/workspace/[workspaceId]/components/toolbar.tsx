@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { InfoIcon, Search } from 'lucide-react';
@@ -20,14 +19,13 @@ import {
 	CommandItem,
 	CommandList,
 	CommandSeparator,
-	CommandShortcut,
 } from "@/components/ui/command"
 
 export const Toolbar = () => {
 	const workspaceId = useWorkspaceId();
 	const router = useRouter();
 
-	const { data, isLoading } = useGetWorkSpace({ id: workspaceId });
+	const { data } = useGetWorkSpace({ id: workspaceId });
 	const { data: channels } = useGetChannels({ workspaceId });
 	const { data: members } = useGetMembers({ workspaceId });
 
@@ -57,6 +55,7 @@ export const Toolbar = () => {
 						<CommandGroup heading="Channels">
 							{channels?.map((channel) => (
 								<CommandItem
+									key={channel._id}
 									className='font-semibold'
 									onSelect={() => onLinkClicked(channel._id, 'channel')}
 								>
@@ -68,6 +67,7 @@ export const Toolbar = () => {
 						<CommandGroup heading="Members">
 							{members?.map((member) => (
 								<CommandItem
+									key={member._id}
 									className='font-semibold'
 									onSelect={() => onLinkClicked(member._id, 'member')}
 								>
