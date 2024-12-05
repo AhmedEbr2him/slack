@@ -186,6 +186,7 @@ export const remove = mutation({
 			throw new Error("Cannot remove self is an admin");
 		};
 
+		// remove all relations for this member to workspace or channel
 		const [messages, reactions, conversations] = await Promise.all([
 			ctx.db
 				.query('messages')

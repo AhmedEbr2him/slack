@@ -12,6 +12,10 @@ import { Button } from '@/components/ui/button';
 import { Id } from '../../../../convex/_generated/dataModel';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
+import { useUpdateMember } from '../api/use-update-member';
+import { useDeleteMember } from '../api/use-delete-member';
+import { useCurrentMember } from '../api/use-current-member';
+import { useWorkspaceId } from '@/hooks/use-workspace-id';
 
 interface ProfileProps {
   memberId: Id<"members">;
@@ -22,7 +26,15 @@ export const Profile = ({
   memberId,
   onClose
 }: ProfileProps) => {
+  const workspaceId = useWorkspaceId();
+
   const { data: member, isLoading: isLoadingMember } = useGetMember({ id: memberId });
+
+  const { data: currentMember } = useCurrentMember({ workspaceId });
+  const { mutate: updateMember, isPending: isUpdatingMember } = useUpdateMember();
+  const { mutate: deleteMember, isPending: isDeletingMember } = useDeleteMember();
+
+  const isPending = isUpdatingMember || isDeletingMember;
 
   const avatarFallback = member?.user.name?.[0] ?? "M";
 
