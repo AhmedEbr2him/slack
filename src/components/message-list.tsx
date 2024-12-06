@@ -13,6 +13,7 @@ import { useWorkspaceId } from '@/hooks/use-workspace-id';
 import { useCurrentMember } from '@/features/members/api/use-current-member';
 
 import { Id } from '../../convex/_generated/dataModel';
+import { useGetMember } from '@/features/members/api/use-get-member';
 
 const TIME_THRESHOLD = 5;
 
@@ -52,12 +53,12 @@ export const MessageList = ({
 
   const workspaceId = useWorkspaceId();
   const { data: currentMember } = useCurrentMember({ workspaceId });
+  const { data: member } = useGetMember({ id: currentMember?._id as Id<"members"> });
 
   const groupMessages = data?.reduce(
     (groups, message) => {
       const date = new Date(message._creationTime);
       const dateKey = format(date, "yyyy-MM-dd");
-
 
       if (!groups[dateKey]) {
         groups[dateKey] = [];
@@ -67,7 +68,6 @@ export const MessageList = ({
       return groups;
     },
     {} as Record<string, typeof data>);
-
 
   return (
     <div className="flex-1 flex flex-col-reverse pb-4 overflow-y-auto messages-scrollbar">
@@ -98,6 +98,7 @@ export const MessageList = ({
                 authorImage={message.user.image}
                 authorName={message.user.name}
                 isAuthor={message.memberId === currentMember?._id}
+                isAdmin={member?.role === 'admin'}
                 reactions={message.reactions}
                 body={message.body}
                 image={message.image}

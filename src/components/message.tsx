@@ -2,30 +2,31 @@ import dynamic from 'next/dynamic';
 
 import type { Doc, Id } from '../../convex/_generated/dataModel';
 import { format, isToday, isYesterday } from 'date-fns';
-import { Hint } from './hint';
 
 import { useUpdateMessage } from '@/features/messages/api/use-update-message';
 import { useDeleteMessage } from '@/features/messages/api/use-delete-message';
 import { useToggleReaction } from '@/features/reactions/api/use-toggle-reaction';
 
-import { useConfirm } from '@/hooks/use-confirm';
 import { usePanel } from '@/hooks/use-panel';
+import { useConfirm } from '@/hooks/use-confirm';
 
 import {
   Avatar,
   AvatarImage,
   AvatarFallback
 } from './ui/avatar';
-import { Thumbnail } from './thumbnail';
+import { Hint } from './hint';
 import { Toolbar } from './toolbar';
+import { Thumbnail } from './thumbnail';
 
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Reactions } from './reactions';
 import { ThreadBar } from './thread-bar';
+import { useAdminDeleteMessage } from '@/features/messages/api/use-admin-delete-message';
 
-const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
+const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 
 interface MessageProps {
   id: Id<"messages">;
@@ -33,6 +34,7 @@ interface MessageProps {
   authorImage?: string;
   authorName?: string;
   isAuthor: boolean;
+  isAdmin: boolean;
   reactions: Array<
     Omit<Doc<"reactions">, "memberId"> & {
       count: number;
@@ -67,6 +69,7 @@ export const Message = ({
   authorImage,
   authorName = "Member",
   isAuthor,
+  isAdmin,
   reactions,
   body,
   image,
@@ -81,7 +84,7 @@ export const Message = ({
   threadName,
   threadTimestamp,
 }: MessageProps) => {
-  const { parentMessageId, profileMemberId, onOpenMessage, onOpenProfile, onClose } = usePanel();
+  const { parentMessageId, onOpenMessage, onOpenProfile, onClose } = usePanel();
 
   const [ConfirmDialog, confirm] = useConfirm(
     'Delete message',
@@ -91,7 +94,7 @@ export const Message = ({
   const { mutate: updateMessage, isPending: isUpdateMessagePending } = useUpdateMessage();
   const { mutate: deleteMessage, isPending: isDeleteMessagePending } = useDeleteMessage();
   const { mutate: toggleReaction, isPending: isTogglingReactionPending } = useToggleReaction();
-
+  const { mutate: adminDeleteMessage, isPending: isAdminDeletingMessagePending } = useAdminDeleteMessage();
   const isPending = isUpdateMessagePending || isTogglingReactionPending;
 
   const avatarFallback = authorName.charAt(0).toLocaleUpperCase();
@@ -125,6 +128,25 @@ export const Message = ({
     if (!ok) return;
 
     deleteMessage({ id }, {
+      onSuccess: () => {
+        toast.success("Message deleted");
+
+        if (parentMessageId === id) {
+          onClose();
+        }
+      },
+      onError: () => {
+        toast.error("Faild to delete message")
+      }
+    })
+  };
+
+  const handleAdminDeleteMessage = async () => {
+    const ok = await confirm();
+
+    if (!ok) return;
+
+    adminDeleteMessage({ id }, {
       onSuccess: () => {
         toast.success("Message deleted");
 
@@ -198,11 +220,13 @@ export const Message = ({
           {!isEditing && (
             <Toolbar
               isAuthor={isAuthor}
+              isAdmin={isAdmin}
               isPending={isPending}
               handleEdit={() => setEditingId(id)}
               handleThread={() => onOpenMessage(id)}
               handleDelete={handleDeleteMessage}
               handleReaction={handleReaction}
+              handleAdminDeleteMessage={handleAdminDeleteMessage}
               hideThreadButton={hideThreadButton}
             />
           )}
@@ -292,10 +316,12 @@ export const Message = ({
         {!isEditing && (
           <Toolbar
             isAuthor={isAuthor}
+            isAdmin={isAdmin}
             isPending={isPending}
             handleEdit={() => setEditingId(id)}
             handleThread={() => onOpenMessage(id)}
             handleDelete={handleDeleteMessage}
+            handleAdminDeleteMessage={handleAdminDeleteMessage}
             handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
           />

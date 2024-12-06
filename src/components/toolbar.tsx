@@ -5,22 +5,26 @@ import { EmojiPopover } from './emoji-popover';
 
 interface ToolbarProps {
   isAuthor: boolean;
+  isAdmin: boolean;
   isPending: boolean;
   handleEdit: () => void;
   handleDelete: () => void;
   handleThread: () => void;
   handleReaction: (value: string) => void;
+  handleAdminDeleteMessage: () => void,
   hideThreadButton?: boolean;
 };
 
 export const Toolbar = ({
   isAuthor,
+  isAdmin,
   isPending,
   handleEdit,
   handleDelete,
   handleThread,
   handleReaction,
-  hideThreadButton
+  hideThreadButton,
+  handleAdminDeleteMessage
 }: ToolbarProps) => {
   return (
     <div className="absolute top-0 right-5">
@@ -51,18 +55,19 @@ export const Toolbar = ({
           </Hint>
         )}
 
-        {isAuthor && (
-          <Hint label='Edit message'>
-            <Button
-              variant='ghost'
-              size="iconSm"
-              disabled={isPending}
-              onClick={handleEdit}
-            >
-              <PencilIcon className='size-4' />
-            </Button>
-          </Hint>
-        )}
+        {isAuthor &&
+          (
+            <Hint label='Edit message'>
+              <Button
+                variant='ghost'
+                size="iconSm"
+                disabled={isPending}
+                onClick={handleEdit}
+              >
+                <PencilIcon className='size-4' />
+              </Button>
+            </Hint>
+          )}
 
         {isAuthor && (
           <Hint label='Delete message'>
@@ -71,6 +76,18 @@ export const Toolbar = ({
               size="iconSm"
               disabled={isPending}
               onClick={handleDelete}
+            >
+              <TrashIcon className='size-4' />
+            </Button>
+          </Hint>
+        )}
+        {isAdmin && (
+          <Hint label='Delete message'>
+            <Button
+              variant='ghost'
+              size="iconSm"
+              disabled={isPending}
+              onClick={handleAdminDeleteMessage}
             >
               <TrashIcon className='size-4' />
             </Button>

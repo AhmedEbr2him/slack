@@ -20,7 +20,6 @@ interface ConversationProps {
 };
 
 export const Conversation = ({ id }: ConversationProps) => {
-  const channelId = useChannelId();
   const memberId = useMemberId();
 
   const { onOpenProfile } = usePanel();
