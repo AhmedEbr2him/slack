@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { Reactions } from './reactions';
 import { ThreadBar } from './thread-bar';
 import { useAdminDeleteMessage } from '@/features/messages/api/use-admin-delete-message';
+import { Wrench } from 'lucide-react';
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
@@ -35,6 +36,7 @@ interface MessageProps {
   authorName?: string;
   isAuthor: boolean;
   isAdmin: boolean;
+  role: string | undefined;
   reactions: Array<
     Omit<Doc<"reactions">, "memberId"> & {
       count: number;
@@ -70,6 +72,7 @@ export const Message = ({
   authorName = "Member",
   isAuthor,
   isAdmin,
+  role,
   reactions,
   body,
   image,
@@ -94,8 +97,10 @@ export const Message = ({
   const { mutate: updateMessage, isPending: isUpdateMessagePending } = useUpdateMessage();
   const { mutate: deleteMessage, isPending: isDeleteMessagePending } = useDeleteMessage();
   const { mutate: toggleReaction, isPending: isTogglingReactionPending } = useToggleReaction();
-  const { mutate: adminDeleteMessage, isPending: isAdminDeletingMessagePending } = useAdminDeleteMessage();
+  const { mutate: adminDeleteMessage } = useAdminDeleteMessage();
   const isPending = isUpdateMessagePending || isTogglingReactionPending;
+
+  console.log({ isAdmin });
 
   const avatarFallback = authorName.charAt(0).toLocaleUpperCase();
 
@@ -192,7 +197,6 @@ export const Message = ({
                   <Renderer value={body} />
                   <Thumbnail url={image} />
                   {updatedAt
-
                     ? <Hint
                       label={formatFullTime(new Date(updatedAt))}
                       align='start'
@@ -234,7 +238,7 @@ export const Message = ({
       </>
     )
   };
-
+  //http://localhost:3000/join/k5734df4d8acjbs5chn3bj5sfd74cr0y z8fdie
   return (
     <>
       <ConfirmDialog />
@@ -272,9 +276,10 @@ export const Message = ({
               <div className='flex flex-col w-full overflow-hidden'>
                 <div className='text-sm'>
                   <button
-                    className='font-bold text-primary hover:underline'
+                    className='font-bold text-primary hover:underline flex items-center'
                     onClick={() => onOpenProfile(memberId)}
                   >
+                    {isAdmin && <Wrench className='size-4 mr-1 text-muted-foreground' />}
                     {authorName}
                   </button>
                   <span className="">&nbsp;&nbsp;</span>
