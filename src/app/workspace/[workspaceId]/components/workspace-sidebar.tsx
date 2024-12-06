@@ -1,19 +1,25 @@
-import { AlertTriangle, HashIcon, Loader, MessageSquareText, SendHorizonal } from 'lucide-react';
+import {
+	SendHorizonal,
+	AlertTriangle,
+	HashIcon, Loader,
+	MessageSquareText,
+} from 'lucide-react';
 
+import { useGetMembers } from '@/features/members/api/use-get-members';
+import { useGetChannels } from '@/features/channels/api/use-get-channels';
 import { useCurrentMember } from '@/features/members/api/use-current-member';
 import { useGetWorkSpace } from '@/features/workspaces/api/use-get-workspace';
-import { useGetChannels } from '@/features/channels/api/use-get-channels';
-import { WorkspaceSection } from './workspace-section';
-import { useGetMembers } from '@/features/members/api/use-get-members';
+import { useCreateChannelModal } from '@/features/channels/store/use-create-channel-modal';
+
 
 import { useMemberId } from '@/hooks/use-member-id';
-import { useWorkspaceId } from '@/hooks/use-workspace-id';
 import { useChannelId } from '@/hooks/use-channel-id';
+import { useWorkspaceId } from '@/hooks/use-workspace-id';
 
-import { useCreateChannelModal } from '@/features/channels/store/use-create-channel-modal';
+import { UserItem } from './user-item';
 import { SidebarItem } from './sidebar-item';
 import { WorkspaceHeader } from './workspace-header';
-import { UserItem } from './user-item';
+import { WorkspaceSection } from './workspace-section';
 
 export const WorkspaceSidebar = () => {
 	const memberId = useMemberId();
@@ -27,8 +33,7 @@ export const WorkspaceSidebar = () => {
 	const { data: channels, isLoading: channelsLoading } = useGetChannels({ workspaceId });
 	const { data: members, isLoading: membersLoading } = useGetMembers({ workspaceId });
 
-	const isLoading = memberLoading || workspaceLoading;
-/* http://localhost:3000/join/k5734df4d8acjbs5chn3bj5sfd74cr0y ukj6di */
+	const isLoading = memberLoading || workspaceLoading || channelsLoading || membersLoading;
 
 	if (isLoading) {
 		return (
