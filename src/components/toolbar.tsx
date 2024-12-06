@@ -69,30 +69,19 @@ export const Toolbar = ({
             </Hint>
           )}
 
-        {isAuthor && (
+        {(isAuthor || isAdmin) && (
           <Hint label='Delete message'>
             <Button
               variant='ghost'
               size="iconSm"
               disabled={isPending}
-              onClick={handleDelete}
+              onClick={isAdmin ? handleAdminDeleteMessage : handleDelete}
             >
               <TrashIcon className='size-4' />
             </Button>
           </Hint>
         )}
-        {isAdmin && (
-          <Hint label='Delete message'>
-            <Button
-              variant='ghost'
-              size="iconSm"
-              disabled={isPending}
-              onClick={handleAdminDeleteMessage}
-            >
-              <TrashIcon className='size-4' />
-            </Button>
-          </Hint>
-        )}
+
       </div>
     </div>
   )
