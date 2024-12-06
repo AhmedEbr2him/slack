@@ -49,7 +49,7 @@ export const SignUpCard = ({ setState }: SignUpCardProps) => {
 	const onProviderSignUp = (value: 'github' | 'google') => {
 		setIsPending(true);
 		signIn(value).finally(() => {
-			setTimeout(() => setIsPending(false), 1500);
+			setIsPending(false)
 		});
 	};
 	return (

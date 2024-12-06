@@ -24,7 +24,7 @@ export const SignInCard = ({ setState }: SignInCardProps) => {
 	const onProviderSignIn = (value: 'github' | 'google') => {
 		setIsPending(true);
 		signIn(value).finally(() => {
-			setTimeout(() => setIsPending(false), 1500);
+			setIsPending(false)
 		});
 	};
 
