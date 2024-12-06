@@ -30,6 +30,7 @@ export const EmojiPopover = ({
 
   const onSelect = (value: EmojiClickData) => {
     onEmojiSelect(value.emoji);
+
     setPopoverOpen(false);
 
     setTimeout(() => {
@@ -56,7 +57,13 @@ export const EmojiPopover = ({
         </Tooltip>
 
         <PopoverContent className='p-0 w-full border-none shadow-none'>
-          <EmojiPicker onEmojiClick={onSelect} />
+          <EmojiPicker
+            onEmojiClick={onSelect}
+            theme={"auto" as any}
+            emojiStyle={"native" as any}
+            suggestedEmojisMode={"recent" as any}
+            searchDisabled={true}
+          />
         </PopoverContent>
       </Popover>
     </TooltipProvider>
