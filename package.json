@@ -11,8 +11,6 @@
 	"dependencies": {
 		"@auth/core": "^0.36.0",
 		"@convex-dev/auth": "^0.0.52",
-		"@emoji-mart/data": "^1.2.1",
-		"@emoji-mart/react": "^1.1.1",
 		"@next/react-dev-overlay": "^14.1.4",
 		"@radix-ui/react-avatar": "^1.1.1",
 		"@radix-ui/react-dialog": "^1.1.2",
