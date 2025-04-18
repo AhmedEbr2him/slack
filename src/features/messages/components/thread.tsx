@@ -215,6 +215,7 @@ export const Thread = ({
                   threadImage={message.threadImage}
                   threadName={message.threadName}
                   threadTimestamp={message.threadTimestamp}
+                  isAdmin={false}
                 />
               )
             })}
@@ -265,6 +266,7 @@ export const Thread = ({
           reactions={message.reactions}
           isEditing={editingId === message._id}
           setEditingId={setEditingId}
+          isAdmin={false}
         />
       </div>
       <div className='px-4'>

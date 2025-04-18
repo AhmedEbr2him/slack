@@ -36,7 +36,7 @@ interface MessageProps {
   authorName?: string;
   isAuthor: boolean;
   isAdmin: boolean;
-  role: string | undefined;
+  role?: string | undefined;
   reactions: Array<
     Omit<Doc<"reactions">, "memberId"> & {
       count: number;
@@ -279,8 +279,10 @@ export const Message = ({
                     className='font-bold text-primary hover:underline flex items-center'
                     onClick={() => onOpenProfile(memberId)}
                   >
-                    {isAdmin && <Wrench className='size-4 mr-1 text-muted-foreground' />}
                     {authorName}
+                    <Hint label='Admin'>
+                      {isAdmin && <Wrench className='size-4 ml-1 text-muted-foreground' />}
+                    </Hint>
                   </button>
                   <span className="">&nbsp;&nbsp;</span>
                   <Hint label={formatFullTime(new Date(createdAt))}>
