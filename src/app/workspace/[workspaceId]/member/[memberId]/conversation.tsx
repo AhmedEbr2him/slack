@@ -2,7 +2,6 @@ import { Loader } from 'lucide-react';
 
 import { usePanel } from '@/hooks/use-panel';
 import { useMemberId } from '@/hooks/use-member-id';
-import { useChannelId } from '@/hooks/use-channel-id';
 
 import type { Id } from '../../../../../../convex/_generated/dataModel';
 

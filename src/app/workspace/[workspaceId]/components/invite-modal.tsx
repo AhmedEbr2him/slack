@@ -11,7 +11,6 @@ import {
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
-	DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 import { useConfirm } from '@/hooks/use-confirm';

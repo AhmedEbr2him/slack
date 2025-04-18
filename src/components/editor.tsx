@@ -1,7 +1,5 @@
 import Image from 'next/image';
 
-import EmojiPicker from "emoji-picker-react";
-
 import {
 	MutableRefObject,
 	useEffect,

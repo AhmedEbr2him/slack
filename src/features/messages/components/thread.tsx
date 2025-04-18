@@ -125,7 +125,8 @@ export const Thread = ({
       setEditorKey((prevKey) => prevKey + 1);
       // editorRef?.current?.setContents([]);
     } catch (error) {
-      toast.error("Faild to send message!")
+      toast.error("Faild to send message!");
+      console.log(error);
     } finally {
       setIsPending(false);
       editorRef?.current?.enable(true);
@@ -216,6 +217,7 @@ export const Thread = ({
                   threadName={message.threadName}
                   threadTimestamp={message.threadTimestamp}
                   isAdmin={currentMember?.role === 'admin'}
+                  role={currentMember?.role}
                 />
               )
             })}
@@ -267,6 +269,7 @@ export const Thread = ({
           isEditing={editingId === message._id}
           setEditingId={setEditingId}
           isAdmin={currentMember?.role === 'admin'}
+          role={currentMember?.role}
         />
       </div>
       <div className='px-4'>

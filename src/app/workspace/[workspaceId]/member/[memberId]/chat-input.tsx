@@ -87,6 +87,7 @@ export const ChatInput = ({
 			// editorRef?.current?.setContents([]);
 		} catch (error) {
 			toast.error("Faild to send message!")
+			console.log(error);
 		} finally {
 			setIsPending(false);
 			editorRef?.current?.enable(true);

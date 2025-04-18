@@ -47,36 +47,37 @@ export const Toolbar = () => {
 					<Search className='size-4 text-white mr-2' />
 					<span className='text-white text-xs'>Search {data?.name}</span>
 				</Button>
-
-				<CommandDialog open={open} onOpenChange={setOpen}>
-					<CommandInput placeholder="Type a command or search..." />
-					<CommandList>
-						<CommandEmpty>No results found.</CommandEmpty>
-						<CommandGroup heading="Channels">
-							{channels?.map((channel) => (
-								<CommandItem
-									key={channel._id}
-									className='font-semibold'
-									onSelect={() => onLinkClicked(channel._id, 'channel')}
-								>
-									{channel.name}
-								</CommandItem>
-							))}
-						</CommandGroup>
-						<CommandSeparator />
-						<CommandGroup heading="Members">
-							{members?.map((member) => (
-								<CommandItem
-									key={member._id}
-									className='font-semibold'
-									onSelect={() => onLinkClicked(member._id, 'member')}
-								>
-									{member.user?.name}
-								</CommandItem>
-							))}
-						</CommandGroup>
-					</CommandList>
-				</CommandDialog>
+				<Command>
+					<CommandDialog open={open} onOpenChange={setOpen}>
+						<CommandInput placeholder="Type a command or search..." />
+						<CommandList>
+							<CommandEmpty>No results found.</CommandEmpty>
+							<CommandGroup heading="Channels">
+								{channels?.map((channel) => (
+									<CommandItem
+										key={channel._id}
+										className='font-semibold'
+										onSelect={() => onLinkClicked(channel._id, 'channel')}
+									>
+										{channel.name}
+									</CommandItem>
+								))}
+							</CommandGroup>
+							<CommandSeparator />
+							<CommandGroup heading="Members">
+								{members?.map((member) => (
+									<CommandItem
+										key={member._id}
+										className='font-semibold'
+										onSelect={() => onLinkClicked(member._id, 'member')}
+									>
+										{member.user?.name}
+									</CommandItem>
+								))}
+							</CommandGroup>
+						</CommandList>
+					</CommandDialog>
+				</Command>
 			</div>
 
 			<div className='ml-auto flex flex-1 items-center justify-end'>

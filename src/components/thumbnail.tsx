@@ -1,11 +1,10 @@
 import {
   Dialog,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
   DialogContent
 } from "@/components/ui/dialog";
-import { XIcon } from 'lucide-react';
+
 
 interface ThumbnailProps {
   url: string | null | undefined;
